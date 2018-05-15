@@ -30,7 +30,12 @@ if ($result) {
     $list = null;
     $json = null;
     while($row = pg_fetch_array($result)) {
-        $json[] = array('distance' => $row['distance'], 'geoJSON' => $row['geojson'], 'pointLatLng' => $row['pointlatlng'], 'place' => $row['place'], 'storeName' => $row['storename']);
+	preg_match('#\((.*?)\)#', $row['pointlatlng'], $match);
+	$ll = explode(" ", $match[1]);
+	$ln = $ll[0];
+	$lt = $ll[1];
+
+        $json[] = array('distance' => (float)$row['distance'], 'longitude' => (float)$ln, 'latitude' => (float)$lt, 'geoJSON' => $row['geojson'], 'pointLatLng' => $row['pointlatlng'], 'place' => $row['place'], 'storeName' => $row['storename']);
     }
     if(sizeof($json) > 0) {
         $list = array('status' => true, 'body' => $json);
