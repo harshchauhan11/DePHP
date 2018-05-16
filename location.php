@@ -13,7 +13,10 @@ $lng = $data['lng'];
 $place = $data['place'];
 
 if($uid > 0 && $etype > 0 && $lat != null && $lng != null) {
-	$sql = "INSERT INTO delvrt.locations (entityTypeId, entityId, latlng, place) VALUES ($etype, $uid, 'SRID=4326;POINT($lng $lat)', '$place')";
+	if($etype == 1)
+		$sql = "INSERT INTO delvrt.locationshistory (entityTypeId, entityId, latlng, place) VALUES ($etype, $uid, 'SRID=4326;POINT($lng $lat)', '$place')";
+	else
+		$sql = "INSERT INTO delvrt.locations (entityTypeId, entityId, latlng, place) VALUES ($etype, $uid, 'SRID=4326;POINT($lng $lat)', '$place')";
 	$result = pg_query($conn, $sql);
 
 	if ($result) {
