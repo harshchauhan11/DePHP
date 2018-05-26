@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-include("admin/conn.php");
+include "admin/conn.php";
 
 $json_str = file_get_contents('php://input');
 $data = json_decode($json_str, true);
@@ -8,8 +8,8 @@ $data = json_decode($json_str, true);
 
 // 72.549512 23.064088
 // 73.796834 18.486473
-$lat = 18.486473;
-$lng = 73.796834;
+$lat = $data['lat'];
+$lng = $data['lng'];
 
 $sql = "with index_query as (
   select *, case
@@ -29,18 +29,18 @@ $result = pg_query($conn, $sql);
 if ($result) {
     $list = null;
     $json = null;
-    while($row = pg_fetch_array($result)) {
-	preg_match('#\((.*?)\)#', $row['pointlatlng'], $match);
-	$ll = explode(" ", $match[1]);
-	$ln = $ll[0];
-	$lt = $ll[1];
+    while ($row = pg_fetch_array($result)) {
+        preg_match('#\((.*?)\)#', $row['pointlatlng'], $match);
+        $ll = explode(" ", $match[1]);
+        $ln = $ll[0];
+        $lt = $ll[1];
 
-        $json[] = array('distance' => (float)$row['distance'], 'longitude' => (float)$ln, 'latitude' => (float)$lt, 'geoJSON' => $row['geojson'], 'pointLatLng' => $row['pointlatlng'], 'place' => $row['place'], 'storeName' => $row['storename']);
+        $json[] = array('distance' => (float) $row['distance'], 'longitude' => (float) $ln, 'latitude' => (float) $lt, 'geoJSON' => $row['geojson'], 'pointLatLng' => $row['pointlatlng'], 'place' => $row['place'], 'storeName' => $row['storename']);
     }
-    if(sizeof($json) > 0) {
+    if (sizeof($json) > 0) {
         $list = array('status' => true, 'body' => $json);
 //        echo '<pre>'.json_encode($list, JSON_PRETTY_PRINT).'</pre>';
-	echo json_encode($list);
+        echo json_encode($list);
     } else {
         $list = array('status' => false, 'body' => []);
         echo json_encode($list);
@@ -48,4 +48,3 @@ if ($result) {
 } else {
     echo pg_last_error($conn);
 }
-?>

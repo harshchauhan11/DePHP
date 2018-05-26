@@ -2,7 +2,7 @@
 session_start();
 $servername = "host = localhost";
 $port = "port = 5432";
-$credentials = "user = postgres password = henk.11";
+$credentials = "user = postgres password = henk";
 $dbname = "dbname = pr";
 
 // $conn = mysqli_connect($servername, $username, $password, $dbname);
